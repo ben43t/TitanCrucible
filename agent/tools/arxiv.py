@@ -103,12 +103,7 @@ class ArxivTool(BaseTool):
                     paper_url = link.get("href", "")
                     break
 
-            sections.append(
-                f"## {title}\n"
-                f"**Authors:** {', '.join(authors)}\n"
-                f"**Published:** {published}\n\n"
-                f"{abstract}"
-            )
+            sections.append(f"## {title}\n**Authors:** {', '.join(authors)}\n**Published:** {published}\n\n{abstract}")
             if paper_url:
                 sources.append(paper_url)
 

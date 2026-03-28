@@ -70,3 +70,9 @@ All 18 tests pass.
 **Prompt:** Create eval/questions.json (15 questions: 6 factual, 6 synthesis, 3 out-of-scope with all 8 reference questions plus 7 additional). Create eval/benchmark.py to run each question, score on source attribution, keyword presence, and refusal accuracy, and print summary table.
 
 **Response:** Created questions.json with 15 questions spanning factual lookups (Wikipedia/FRED), multi-source synthesis (Wikipedia+arXiv), and out-of-scope refusals. Created benchmark.py with scoring functions for source attribution (URL marker matching), keyword presence (case-insensitive), forbidden keyword absence, and refusal detection. Outputs per-question pass/fail table with overall score percentage. All scoring functions validated, all 27 unit tests pass.
+
+## Turn 12 — README and Final Review
+
+**Prompt:** Write README.md with architecture overview, setup instructions, tool descriptions, Tier 2 comparison evidence, performance assessment, limitations, and future improvements. Run final checks (lint, typecheck, tests, traces, .env not committed).
+
+**Response:** Created comprehensive README.md covering all required sections. Fixed all lint issues (set line-length to 120, auto-formatted with ruff). Final status: ruff check passes clean, ruff format passes clean, all 27 tests pass, 3 trace files present, .env is gitignored. Prompt log is complete with all 12 turns documented.

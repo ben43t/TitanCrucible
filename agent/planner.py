@@ -58,9 +58,7 @@ AVAILABLE TOOLS:
 
 
 def _build_system_prompt(tools: list[BaseTool]) -> str:
-    tool_lines = "\n".join(
-        f"- {tool.name}: {tool.description}" for tool in tools
-    )
+    tool_lines = "\n".join(f"- {tool.name}: {tool.description}" for tool in tools)
     return _SYSTEM_PROMPT.format(tool_descriptions=tool_lines)
 
 
@@ -93,8 +91,7 @@ class Planner:
         api_key = os.environ.get("GEMINI_API_KEY")
         if not api_key:
             print(
-                "Error: GEMINI_API_KEY is not set. "
-                "Get a free key at https://aistudio.google.com/app/apikey",
+                "Error: GEMINI_API_KEY is not set. Get a free key at https://aistudio.google.com/app/apikey",
                 file=sys.stderr,
             )
             sys.exit(1)

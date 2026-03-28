@@ -55,7 +55,7 @@ class WikipediaTool(BaseTool):
             except requests.RequestException as exc:
                 last_exc = exc
                 if attempt < _MAX_RETRIES - 1:
-                    time.sleep(_BACKOFF_BASE * (2 ** attempt))
+                    time.sleep(_BACKOFF_BASE * (2**attempt))
         raise last_exc  # type: ignore[misc]
 
     def _search(self, query: str) -> str | None:

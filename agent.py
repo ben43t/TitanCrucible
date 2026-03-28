@@ -13,12 +13,8 @@ def main() -> None:
         description="Multi-tool research agent for banking and economics questions.",
     )
     parser.add_argument("question", help="The research question to answer")
-    parser.add_argument(
-        "--verbose", action="store_true", help="Show full tool outputs during execution"
-    )
-    parser.add_argument(
-        "--no-trace", action="store_true", help="Skip writing a trace file"
-    )
+    parser.add_argument("--verbose", action="store_true", help="Show full tool outputs during execution")
+    parser.add_argument("--no-trace", action="store_true", help="Skip writing a trace file")
     args = parser.parse_args()
 
     try:

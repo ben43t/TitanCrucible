@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from agent.models import ToolResult, TraceStep
 from agent.planner import Planner
@@ -29,18 +29,16 @@ class ResearchAgent:
         history: list[TraceStep] = []
         all_sources: list[str] = []
 
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"Question: {question}")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}\n")
 
         while state.should_continue():
             step_num = state.increment()
 
             # Get next action from LLM
             try:
-                raw_response = self._planner.think(
-                    question, list(self._tools.values()), history
-                )
+                raw_response = self._planner.think(question, list(self._tools.values()), history)
             except Exception as exc:
                 print(f"\n[Step {step_num}] Planner error: {exc}", file=sys.stderr)
                 break
@@ -75,7 +73,7 @@ class ResearchAgent:
                     tool_name="none",
                     tool_input="",
                     tool_output=result,
-                    timestamp=datetime.now(timezone.utc),
+                    timestamp=datetime.now(UTC),
                 )
                 history.append(step)
                 tracer.add_step(step)
@@ -115,7 +113,7 @@ class ResearchAgent:
                 tool_name=action,
                 tool_input=action_input,
                 tool_output=result,
-                timestamp=datetime.now(timezone.utc),
+                timestamp=datetime.now(UTC),
             )
             history.append(step)
             tracer.add_step(step)
@@ -124,11 +122,7 @@ class ResearchAgent:
         fallback = (
             "I was unable to reach a complete answer within the allowed number of "
             "reasoning steps. Here is what I found so far:\n\n"
-            + "\n".join(
-                f"- [{s.tool_name}] {s.tool_output.content[:300]}"
-                for s in history
-                if s.tool_output.success
-            )
+            + "\n".join(f"- [{s.tool_name}] {s.tool_output.content[:300]}" for s in history if s.tool_output.success)
         )
         if self._write_trace:
             tracer.finalize(fallback)

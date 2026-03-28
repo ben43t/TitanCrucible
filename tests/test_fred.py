@@ -1,5 +1,5 @@
-import requests
 import pytest
+import requests
 
 from agent.tools.fred import FredTool
 
@@ -20,22 +20,28 @@ class TestFredToolSuccess:
     def test_search_and_fetch_observations(self, tool: FredTool, mocker) -> None:
         mocker.patch.dict("os.environ", {"FRED_API_KEY": "test-key"})
 
-        search_resp = _mock_response(mocker, {
-            "seriess": [
-                {
-                    "id": "UNRATE",
-                    "title": "Unemployment Rate",
-                    "units": "Percent",
-                    "frequency": "Monthly",
-                }
-            ],
-        })
-        obs_resp = _mock_response(mocker, {
-            "observations": [
-                {"date": "2024-06-01", "value": "4.1"},
-                {"date": "2024-05-01", "value": "4.0"},
-            ],
-        })
+        search_resp = _mock_response(
+            mocker,
+            {
+                "seriess": [
+                    {
+                        "id": "UNRATE",
+                        "title": "Unemployment Rate",
+                        "units": "Percent",
+                        "frequency": "Monthly",
+                    }
+                ],
+            },
+        )
+        obs_resp = _mock_response(
+            mocker,
+            {
+                "observations": [
+                    {"date": "2024-06-01", "value": "4.1"},
+                    {"date": "2024-05-01", "value": "4.0"},
+                ],
+            },
+        )
 
         mocker.patch(
             "agent.tools.fred.requests.get",
@@ -56,21 +62,27 @@ class TestFredToolSuccess:
     def test_direct_series_id_fetch(self, tool: FredTool, mocker) -> None:
         mocker.patch.dict("os.environ", {"FRED_API_KEY": "test-key"})
 
-        info_resp = _mock_response(mocker, {
-            "seriess": [
-                {
-                    "id": "GDP",
-                    "title": "Gross Domestic Product",
-                    "units": "Billions of Dollars",
-                    "frequency": "Quarterly",
-                }
-            ],
-        })
-        obs_resp = _mock_response(mocker, {
-            "observations": [
-                {"date": "2024-04-01", "value": "28000.5"},
-            ],
-        })
+        info_resp = _mock_response(
+            mocker,
+            {
+                "seriess": [
+                    {
+                        "id": "GDP",
+                        "title": "Gross Domestic Product",
+                        "units": "Billions of Dollars",
+                        "frequency": "Quarterly",
+                    }
+                ],
+            },
+        )
+        obs_resp = _mock_response(
+            mocker,
+            {
+                "observations": [
+                    {"date": "2024-04-01", "value": "28000.5"},
+                ],
+            },
+        )
 
         mocker.patch(
             "agent.tools.fred.requests.get",

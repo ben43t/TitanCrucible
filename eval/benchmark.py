@@ -96,15 +96,17 @@ def run_benchmark() -> None:
             answer, sources = agent.run(question)
         except Exception as exc:
             print(f"  ERROR: {exc}")
-            results.append({
-                "id": qid,
-                "type": q_type,
-                "sources_ok": False,
-                "keywords_ok": False,
-                "no_keywords_ok": True,
-                "refusal_ok": False,
-                "error": str(exc),
-            })
+            results.append(
+                {
+                    "id": qid,
+                    "type": q_type,
+                    "sources_ok": False,
+                    "keywords_ok": False,
+                    "no_keywords_ok": True,
+                    "refusal_ok": False,
+                    "error": str(exc),
+                }
+            )
             continue
 
         sources_ok = _check_sources(answer, sources, q["expected_sources"])
@@ -116,15 +118,17 @@ def run_benchmark() -> None:
         status = "PASS" if passed else "FAIL"
         print(f"  [{status}] sources={sources_ok} keywords={keywords_ok} refusal={refusal_ok}")
 
-        results.append({
-            "id": qid,
-            "type": q_type,
-            "sources_ok": sources_ok,
-            "keywords_ok": keywords_ok,
-            "no_keywords_ok": no_keywords_ok,
-            "refusal_ok": refusal_ok,
-            "error": None,
-        })
+        results.append(
+            {
+                "id": qid,
+                "type": q_type,
+                "sources_ok": sources_ok,
+                "keywords_ok": keywords_ok,
+                "no_keywords_ok": no_keywords_ok,
+                "refusal_ok": refusal_ok,
+                "error": None,
+            }
+        )
 
         # Respect rate limits between questions
         time.sleep(2)

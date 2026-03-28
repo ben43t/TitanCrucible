@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from agent.models import TraceStep
 
@@ -23,11 +23,11 @@ class Tracer:
             "steps": [json.loads(s.model_dump_json()) for s in self._steps],
             "final_answer": answer,
             "total_duration_seconds": round(duration, 3),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
         os.makedirs("traces", exist_ok=True)
-        filename = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%f") + ".json"
+        filename = datetime.now(UTC).strftime("%Y%m%dT%H%M%S_%f") + ".json"
         path = os.path.join("traces", filename)
 
         # Never overwrite — append a counter if the file somehow exists
