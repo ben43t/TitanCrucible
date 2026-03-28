@@ -71,6 +71,9 @@ class TestArxivToolNoResults:
         result = tool.run("xyznonexistent123")
 
         assert result.success is False
+        assert result.tool_name == "arxiv"
+        assert result.content == ""
+        assert result.sources == []
         assert "No arXiv papers found" in result.error
 
     def test_malformed_xml(self, tool: ArxivTool, mocker) -> None:
@@ -83,6 +86,9 @@ class TestArxivToolNoResults:
         result = tool.run("anything")
 
         assert result.success is False
+        assert result.tool_name == "arxiv"
+        assert result.content == ""
+        assert result.sources == []
         assert "Malformed XML" in result.error
 
 

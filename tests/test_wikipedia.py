@@ -59,6 +59,9 @@ class TestWikipediaToolNotFound:
         result = tool.run("xyznonexistentarticle123")
 
         assert result.success is False
+        assert result.tool_name == "wikipedia"
+        assert result.content == ""
+        assert result.sources == []
         assert "No Wikipedia article found" in result.error
 
     def test_disambiguation_page(self, tool: WikipediaTool, mocker) -> None:
@@ -83,6 +86,8 @@ class TestWikipediaToolNotFound:
         result = tool.run("Bank")
 
         assert result.success is False
+        assert result.tool_name == "wikipedia"
+        assert "disambiguation" in result.content.lower()
         assert "disambiguation" in result.error.lower()
 
 

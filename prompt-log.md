@@ -58,3 +58,9 @@
 - Q6 single-step: generic yield curve definition, no papers, no synthesis
 - Q6 multi-step: found "Inverted yield curve" article, synthesized explanation with economic theory, predictive power, and cited academic papers
 All 18 tests pass.
+
+## Turn 10 — Unit Tests for All Tool Wrappers
+
+**Prompt:** Review and complete all tool tests. Ensure all HTTP calls mocked, cover happy/not-found/network-failure/force_fail paths, assert on ToolResult fields. Add tests/test_state.py for AgentState (max iterations, duplicate detection, should_continue).
+
+**Response:** Strengthened existing tool tests with additional field assertions (tool_name, content, sources) on error paths. Created tests/test_state.py with 9 tests: max iteration enforcement (within limit, at limit, step counting, default of 6) and duplicate detection (first call, identical call, different tool same query, same tool different query, multiple unique calls). All 27 tests pass.

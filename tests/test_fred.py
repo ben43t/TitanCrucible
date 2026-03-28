@@ -93,6 +93,9 @@ class TestFredToolMissingKey:
         result = tool.run("unemployment")
 
         assert result.success is False
+        assert result.tool_name == "fred"
+        assert result.content == ""
+        assert result.sources == []
         assert "FRED_API_KEY" in result.error
 
 
@@ -106,6 +109,9 @@ class TestFredToolNotFound:
         result = tool.run("xyznonexistent123series")
 
         assert result.success is False
+        assert result.tool_name == "fred"
+        assert result.content == ""
+        assert result.sources == []
         assert "No FRED series found" in result.error
 
     def test_series_id_not_found(self, tool: FredTool, mocker) -> None:
