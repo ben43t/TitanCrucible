@@ -51,8 +51,13 @@ traces/               JSON trace files (one per agent run)
 ### Prerequisites
 
 - Python 3.12+
-- [uv](https://docs.astral.sh/uv/) (package manager)
-- [just](https://github.com/casey/just) (command runner)
+- [uv](https://docs.astral.sh/uv/) — install: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+- [just](https://github.com/casey/just) — install via any of:
+  - macOS: `brew install just`
+  - Windows: `winget install Casey.Just` or `scoop install just`
+  - Linux: `sudo apt install just` or `sudo dnf install just`
+  - Any OS (prebuilt binaries): `cargo install just` or download from
+    [GitHub releases](https://github.com/casey/just/releases)
 
 ### Install
 
