@@ -47,3 +47,14 @@
 **Prompt:** Wire up agent.py CLI with argparse (question, --verbose, --no-trace). Initialize all tools, run agent, print cited answer with sources. Handle unhandled exceptions cleanly. Run end-to-end test.
 
 **Response:** Created agent.py with argparse, tool init, and formatted output. Updated core.py to return (answer, sources) tuple, support verbose and write_trace flags. Fixed two bugs found during e2e testing: (1) Wikipedia 403 — added User-Agent header, (2) Gemini returns markdown-bold labels — updated regex to tolerate `**Thought:**` format. Fixed FRED missing-key test to patch load_dotenv. End-to-end run successful against discount window question. All 18 tests pass.
+
+## Turn 9 — Multi-Step Reasoning and Loop Guard
+
+**Prompt:** Verify multi-step reasoning works, enhance planner prompt to encourage cross-tool synthesis, run Q4 (Fed 2008 vs COVID-19) and Q6 (yield curve inversions) in both single-step and multi-step modes, capture outputs for README Tier 2 comparison.
+
+**Response:** Enhanced system prompt with: (1) stricter Thought-line requirement, (2) explicit multi-step reasoning strategy (cross-tool synthesis, FRED data supplementation), (3) rule requiring 2-3 tools for complex questions. Added rate-limit retry logic to Planner (5 retries, extracts wait time from error). Added configurable max_steps to ResearchAgent. Results:
+- Q4 single-step: ran out of steps with raw Wikipedia fragments, no synthesis
+- Q4 multi-step: synthesized detailed comparison covering interest rates, QE scope, targeted lending programs, and nature of shock across 4 Wikipedia sources
+- Q6 single-step: generic yield curve definition, no papers, no synthesis
+- Q6 multi-step: found "Inverted yield curve" article, synthesized explanation with economic theory, predictive power, and cited academic papers
+All 18 tests pass.

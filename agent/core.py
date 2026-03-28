@@ -15,14 +15,16 @@ class ResearchAgent:
         planner: Planner,
         verbose: bool = False,
         write_trace: bool = True,
+        max_steps: int = 6,
     ) -> None:
         self._tools = {tool.name: tool for tool in tools}
         self._planner = planner
         self._verbose = verbose
         self._write_trace = write_trace
+        self._max_steps = max_steps
 
     def run(self, question: str) -> tuple[str, list[str]]:
-        state = AgentState()
+        state = AgentState(max_steps=self._max_steps)
         tracer = Tracer(question)
         history: list[TraceStep] = []
         all_sources: list[str] = []

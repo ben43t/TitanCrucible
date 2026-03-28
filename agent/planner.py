@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import time
 
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -12,32 +13,44 @@ _SYSTEM_PROMPT = """\
 You are a research agent for a banking startup. You answer questions by searching \
 external sources and synthesizing cited answers.
 
-You operate in a strict ReAct loop. On each turn, emit exactly ONE of the following:
+You operate in a strict ReAct loop. On each turn you MUST emit exactly ONE of the \
+following two formats. Every response MUST begin with "Thought:" on the first line.
 
-== Option A: Use a tool ==
-Thought: <your reasoning about what to do next>
+FORMAT A — Use a tool:
+Thought: <your reasoning about what information you still need and which tool to use>
 Action: <tool name — must be one of the listed tools>
 Action Input: <the search query to send to the tool>
 
-== Option B: Deliver the final answer ==
-Thought: <your reasoning about why you have enough information>
+FORMAT B — Deliver the final answer (only when you have enough information):
+Thought: <your reasoning about why you have enough information to answer>
 Final Answer: <your complete, cited answer>
 
-RULES:
-- ALWAYS start with a Thought line.
-- Never emit both an Action and a Final Answer in the same turn.
-- When you have gathered enough information, synthesize a Final Answer.
-- In your Final Answer, clearly distinguish between facts retrieved from tools \
-and your own inference or interpretation. Use phrases like "According to [source]" \
-for retrieved facts and "Based on this data, it appears that..." for inference.
-- Cite your sources inline (e.g. "According to Wikipedia [1]...") and list source \
-URLs at the end.
-- If the question is outside your research scope (e.g. restaurant recommendations, \
+CRITICAL RULES:
+1. You MUST start every response with "Thought:" — never skip it.
+2. Never emit both an Action and a Final Answer in the same response.
+3. Use at least 2-3 different tools before giving a Final Answer when the question \
+is complex or spans multiple topics.
+4. In your Final Answer, distinguish between retrieved facts and your own inference. \
+Use "According to [source]" for retrieved facts and "Based on this data" for inference.
+5. Cite sources inline (e.g. "According to Wikipedia [1]...") and list URLs at the end.
+6. If the question is outside your research scope (e.g. restaurant recommendations, \
 personal advice, opinions), respond with:
-  Final Answer: This is outside my research scope. I can help with questions about \
+   Thought: This question is outside my research scope.
+   Final Answer: This is outside my research scope. I can help with questions about \
 economics, finance, banking, academic research, and related factual topics.
-- Do not fabricate data. If a tool returns no results, say so.
-- Do not repeat a tool call with the exact same query — try a different query or tool.
+7. Do not fabricate data. If a tool returns no results, say so.
+8. Do not repeat a tool call with the exact same query — vary the query or try a \
+different tool.
+
+MULTI-STEP REASONING STRATEGY:
+- After each tool result, reflect on what you learned and what gaps remain.
+- Use intermediate results to decide your next tool call. For example, if Wikipedia \
+mentions a specific economic indicator, follow up with FRED for the actual data.
+- When a question asks about both concepts and research, combine Wikipedia for \
+background context with arXiv for academic papers.
+- When a question involves economic data, supplement Wikipedia explanations with \
+real numbers from FRED to make the answer concrete and current.
+- Prefer cross-referencing multiple sources — it produces more complete, verifiable answers.
 
 AVAILABLE TOOLS:
 {tool_descriptions}
@@ -104,14 +117,33 @@ class Planner:
         if history_text:
             user_content = f"{user_content}\n\nPrevious steps:\n{history_text}\n\nContinue the ReAct loop."
 
-        response = model.generate_content(
-            contents=[user_content],
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.2,
-                max_output_tokens=2048,
-            ),
-        )
+        response = self._generate_with_retry(model, user_content)
         return response.text
+
+    @staticmethod
+    def _generate_with_retry(
+        model: genai.GenerativeModel,
+        content: str,
+        max_retries: int = 5,
+    ) -> genai.types.GenerateContentResponse:
+        for attempt in range(max_retries):
+            try:
+                return model.generate_content(
+                    contents=[content],
+                    generation_config=genai.types.GenerationConfig(
+                        temperature=0.2,
+                        max_output_tokens=2048,
+                    ),
+                )
+            except Exception as exc:
+                if "429" in str(exc) and attempt < max_retries - 1:
+                    # Extract retry delay from error message
+                    delay_match = re.search(r"retry in (\d+(?:\.\d+)?)s", str(exc))
+                    wait = int(float(delay_match.group(1))) + 5 if delay_match else 60
+                    print(f"  [Rate limited, retrying in {wait}s...]", file=sys.stderr)
+                    time.sleep(wait)
+                else:
+                    raise
 
     def parse_response(self, response: str) -> dict[str, str | None]:
         thought_match = _THOUGHT_RE.search(response)
