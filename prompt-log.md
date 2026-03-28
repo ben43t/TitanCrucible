@@ -17,3 +17,9 @@
 **Prompt:** Implement WikipediaTool in agent/tools/wikipedia.py extending BaseTool. Uses REST API (search) and Action API (summary). Handles not-found, disambiguation, network errors with exponential backoff retry (max 3). Also write tests/test_wikipedia.py with mocked HTTP calls.
 
 **Response:** Implemented WikipediaTool with _search (REST v1 search endpoint) and _fetch_summary (summary endpoint). Added _request_with_retry for exponential backoff. Tests cover: successful fetch, not found, disambiguation, network failure with retry exhaustion, retry then success, and force_fail. All 6 tests pass.
+
+## Turn 4 — arXiv Tool Wrapper
+
+**Prompt:** Implement ArxivTool in agent/tools/arxiv.py extending BaseTool. Uses arXiv API, returns top 3 results sorted by relevance with title/authors/date/abstract. Handles no results, malformed XML, network errors with retry. Write tests/test_arxiv.py with mocked HTTP.
+
+**Response:** Implemented ArxivTool with XML parsing via ElementTree, ATOM namespace handling, and _request_with_retry for exponential backoff. Content formatted with markdown headers per paper. Tests cover: successful multi-result fetch, no results, malformed XML, network failure, and force_fail. All 5 tests pass.
