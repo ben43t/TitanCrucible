@@ -9,14 +9,23 @@ from agent.tracer import Tracer
 
 
 class ResearchAgent:
-    def __init__(self, tools: list[BaseTool], planner: Planner) -> None:
+    def __init__(
+        self,
+        tools: list[BaseTool],
+        planner: Planner,
+        verbose: bool = False,
+        write_trace: bool = True,
+    ) -> None:
         self._tools = {tool.name: tool for tool in tools}
         self._planner = planner
+        self._verbose = verbose
+        self._write_trace = write_trace
 
-    def run(self, question: str) -> str:
+    def run(self, question: str) -> tuple[str, list[str]]:
         state = AgentState()
         tracer = Tracer(question)
         history: list[TraceStep] = []
+        all_sources: list[str] = []
 
         print(f"\n{'='*60}")
         print(f"Question: {question}")
@@ -40,9 +49,9 @@ class ResearchAgent:
 
             # Check for final answer
             if parsed["final_answer"]:
-                print(f"\nFinal Answer: {parsed['final_answer']}\n")
-                tracer.finalize(parsed["final_answer"])
-                return parsed["final_answer"]
+                if self._write_trace:
+                    tracer.finalize(parsed["final_answer"])
+                return parsed["final_answer"], all_sources
 
             action = parsed["action"]
             action_input = parsed["action_input"]
@@ -87,8 +96,16 @@ class ResearchAgent:
             else:
                 result = self._dispatch(action, action_input)
 
+            # Collect sources from successful tool calls
+            for src in result.sources:
+                if src and src not in all_sources:
+                    all_sources.append(src)
+
             status = "OK" if result.success else f"FAILED: {result.error}"
-            print(f"[Step {step_num}] Result: [{status}] {result.content[:200]}")
+            if self._verbose:
+                print(f"[Step {step_num}] Result: [{status}] {result.content}")
+            else:
+                print(f"[Step {step_num}] Result: [{status}] {result.content[:200]}")
 
             step = TraceStep(
                 step=step_num,
@@ -111,9 +128,9 @@ class ResearchAgent:
                 if s.tool_output.success
             )
         )
-        print(f"\n{fallback}\n")
-        tracer.finalize(fallback)
-        return fallback
+        if self._write_trace:
+            tracer.finalize(fallback)
+        return fallback, all_sources
 
     def _dispatch(self, tool_name: str, query: str) -> ToolResult:
         tool = self._tools.get(tool_name)

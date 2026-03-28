@@ -67,11 +67,11 @@ def _build_history_text(history: list[TraceStep]) -> str:
     return "\n\n".join(parts)
 
 
-# Patterns for parsing the LLM response
-_THOUGHT_RE = re.compile(r"Thought:\s*(.+?)(?=\n(?:Action:|Final Answer:)|$)", re.DOTALL)
-_ACTION_RE = re.compile(r"Action:\s*(.+)")
-_ACTION_INPUT_RE = re.compile(r"Action Input:\s*(.+)")
-_FINAL_ANSWER_RE = re.compile(r"Final Answer:\s*(.+)", re.DOTALL)
+# Patterns for parsing the LLM response — tolerate optional markdown bold (**) wrapping
+_THOUGHT_RE = re.compile(r"\*{0,2}Thought:?\*{0,2}\s*(.+?)(?=\n\*{0,2}(?:Action|Final Answer):?\*{0,2}|$)", re.DOTALL)
+_ACTION_RE = re.compile(r"\*{0,2}Action:?\*{0,2}\s*(.+)")
+_ACTION_INPUT_RE = re.compile(r"\*{0,2}Action Input:?\*{0,2}\s*(.+)")
+_FINAL_ANSWER_RE = re.compile(r"\*{0,2}Final Answer:?\*{0,2}\s*(.+)", re.DOTALL)
 
 
 class Planner:
@@ -86,7 +86,6 @@ class Planner:
             )
             sys.exit(1)
         genai.configure(api_key=api_key)
-        self._model = genai.GenerativeModel("gemini-2.5-flash")
 
     def think(
         self,
@@ -95,13 +94,17 @@ class Planner:
         history: list[TraceStep],
     ) -> str:
         system_prompt = _build_system_prompt(tools)
+        model = genai.GenerativeModel(
+            "gemini-2.5-flash",
+            system_instruction=system_prompt,
+        )
         history_text = _build_history_text(history)
 
         user_content = f"Question: {question}"
         if history_text:
             user_content = f"{user_content}\n\nPrevious steps:\n{history_text}\n\nContinue the ReAct loop."
 
-        response = self._model.generate_content(
+        response = model.generate_content(
             contents=[user_content],
             generation_config=genai.types.GenerationConfig(
                 temperature=0.2,

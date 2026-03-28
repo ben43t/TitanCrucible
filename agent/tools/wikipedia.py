@@ -9,6 +9,7 @@ _SEARCH_URL = "https://en.wikipedia.org/w/rest.php/v1/search/page"
 _SUMMARY_URL = "https://en.wikipedia.org/api/rest_v1/page/summary"
 _MAX_RETRIES = 3
 _BACKOFF_BASE = 0.5
+_HEADERS = {"User-Agent": "TitanCrucible/0.1 (research-agent; educational project)"}
 
 
 class WikipediaTool(BaseTool):
@@ -48,7 +49,7 @@ class WikipediaTool(BaseTool):
         last_exc: Exception | None = None
         for attempt in range(_MAX_RETRIES):
             try:
-                resp = requests.get(url, params=params, timeout=10)
+                resp = requests.get(url, params=params, headers=_HEADERS, timeout=10)
                 resp.raise_for_status()
                 return resp
             except requests.RequestException as exc:

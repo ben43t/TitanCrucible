@@ -41,3 +41,9 @@
 **Prompt:** Implement agent/planner.py (Planner wrapping Gemini 2.5 Flash with ReAct system prompt, think/parse_response methods) and agent/core.py (ResearchAgent with full ReAct loop: think → check state → dispatch tool → record trace → loop until Final Answer or max iterations).
 
 **Response:** Created Planner with system prompt describing ReAct format, tool listing, out-of-scope refusal, and fact-vs-inference distinction. Regex-based parse_response extracts thought/action/action_input/final_answer. Created ResearchAgent with run() implementing the full loop: LLM planning, duplicate detection via AgentState, tool dispatch with graceful error handling, TraceStep recording, stdout logging, and max-iteration fallback. Both modules import cleanly.
+
+## Turn 8 — CLI Entrypoint
+
+**Prompt:** Wire up agent.py CLI with argparse (question, --verbose, --no-trace). Initialize all tools, run agent, print cited answer with sources. Handle unhandled exceptions cleanly. Run end-to-end test.
+
+**Response:** Created agent.py with argparse, tool init, and formatted output. Updated core.py to return (answer, sources) tuple, support verbose and write_trace flags. Fixed two bugs found during e2e testing: (1) Wikipedia 403 — added User-Agent header, (2) Gemini returns markdown-bold labels — updated regex to tolerate `**Thought:**` format. Fixed FRED missing-key test to patch load_dotenv. End-to-end run successful against discount window question. All 18 tests pass.

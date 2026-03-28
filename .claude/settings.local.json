@@ -6,7 +6,8 @@
       "Bash(uv sync:*)",
       "Bash(curl -LsSf https://astral.sh/uv/install.sh)",
       "Bash(sh)",
-      "Bash(source $HOME/.local/bin/env)"
+      "Bash(source $HOME/.local/bin/env)",
+      "Bash(ls /Users/ben/dev/TitanCrucible/traces/*.json)"
     ]
   }
 }

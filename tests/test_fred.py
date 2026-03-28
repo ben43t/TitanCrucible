@@ -87,6 +87,7 @@ class TestFredToolSuccess:
 
 class TestFredToolMissingKey:
     def test_missing_api_key(self, tool: FredTool, mocker) -> None:
+        mocker.patch("agent.tools.fred.load_dotenv")
         mocker.patch.dict("os.environ", {}, clear=True)
 
         result = tool.run("unemployment")
