@@ -230,6 +230,20 @@ returned the same generic definition twice with no analysis.
 8. **Better evaluation:** The current benchmark scores presence/absence of
    keywords and sources. A more meaningful evaluation would use an LLM-as-judge
    to score answer quality, completeness, and citation accuracy.
+9. **LangSmith for evaluation:** The current benchmark is keyword-based. 
+   LangSmith's tracing and evaluation suite would give far more meaningful 
+   signal on answer quality, hallucination detection, and cross-run regression 
+   testing — without building a custom eval harness.
+10. **Production deployment on AWS:** For a real banking startup context, the 
+    agent would run as an AWS Lambda function behind API Gateway, with 
+    DynamoDB for trace storage, Secrets Manager for API keys, and 
+    CloudWatch for observability — replacing the current file-based trace 
+    system.
+11. **LangChain as the agent scales:** The hand-rolled ReAct loop was the 
+    right call for a prototype — it keeps the codebase readable and avoids 
+    framework magic. At production scale with 10+ tools, a retrieval layer, 
+    and memory, LangChain's tool registry and LangSmith's observability would 
+    justify the abstraction cost.
 
 ## Running Tests
 
