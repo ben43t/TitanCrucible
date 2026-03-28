@@ -23,3 +23,9 @@
 **Prompt:** Implement ArxivTool in agent/tools/arxiv.py extending BaseTool. Uses arXiv API, returns top 3 results sorted by relevance with title/authors/date/abstract. Handles no results, malformed XML, network errors with retry. Write tests/test_arxiv.py with mocked HTTP.
 
 **Response:** Implemented ArxivTool with XML parsing via ElementTree, ATOM namespace handling, and _request_with_retry for exponential backoff. Content formatted with markdown headers per paper. Tests cover: successful multi-result fetch, no results, malformed XML, network failure, and force_fail. All 5 tests pass.
+
+## Turn 5 — FRED Tool Wrapper
+
+**Prompt:** Implement FredTool in agent/tools/fred.py extending BaseTool. Uses FRED API with API key from .env. Supports series search and direct series ID observation fetch, auto-detecting which to use via regex. Handles missing key, not found, network errors. Write tests/test_fred.py.
+
+**Response:** Implemented FredTool with two-operation design: _search_series (keyword search, picks top result, then fetches observations) and _fetch_observations (direct series ID lookup). Uses regex to detect series IDs. Returns formatted table with title, units, frequency, and recent data points. Tests cover: search+fetch, direct ID fetch, missing API key, search not found, ID not found, network failure, and force_fail. All 7 tests pass.
