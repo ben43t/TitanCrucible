@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run:*)",
+      "Bash(export PATH=\"$HOME/.local/bin:$HOME/.cargo/bin:$PATH\")",
+      "Bash(uv sync:*)",
+      "Bash(curl -LsSf https://astral.sh/uv/install.sh)",
+      "Bash(sh)",
+      "Bash(source $HOME/.local/bin/env)"
+    ]
+  }
+}
