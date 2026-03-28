@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "question": "What is the Federal Reserve's discount window and how does it work?",
+    "type": "factual",
+    "expected_sources": ["wikipedia"],
+    "must_include": ["discount window", "borrow"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 2,
+    "question": "What are the Basel III capital requirements for banks?",
+    "type": "factual",
+    "expected_sources": ["wikipedia"],
+    "must_include": ["Basel III", "capital"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 3,
+    "question": "What recent academic research exists on using machine learning for credit risk assessment?",
+    "type": "synthesis",
+    "expected_sources": ["arxiv"],
+    "must_include": ["credit risk", "machine learning"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 4,
+    "question": "How did the Federal Reserve's monetary policy response to the 2008 financial crisis differ from its response to COVID-19?",
+    "type": "synthesis",
+    "expected_sources": ["wikipedia"],
+    "must_include": ["2008", "COVID"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 5,
+    "question": "What is the current US unemployment rate and how has it changed over the past year?",
+    "type": "factual",
+    "expected_sources": ["fred"],
+    "must_include": ["unemployment"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 6,
+    "question": "Explain the relationship between yield curve inversions and recessions. Are there recent academic papers on this topic?",
+    "type": "synthesis",
+    "expected_sources": ["wikipedia", "arxiv"],
+    "must_include": ["yield curve", "recession"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 7,
+    "question": "What is the best restaurant in New York City?",
+    "type": "out_of_scope",
+    "expected_sources": [],
+    "must_include": [],
+    "must_not_include": [],
+    "should_refuse": true
+  },
+  {
+    "id": 8,
+    "question": "What are the implications of quantum computing for banking encryption?",
+    "type": "synthesis",
+    "expected_sources": ["wikipedia", "arxiv"],
+    "must_include": ["quantum", "encryption"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 9,
+    "question": "What is the current federal funds rate?",
+    "type": "factual",
+    "expected_sources": ["fred"],
+    "must_include": ["federal funds rate"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 10,
+    "question": "Explain how fractional reserve banking works.",
+    "type": "factual",
+    "expected_sources": ["wikipedia"],
+    "must_include": ["fractional reserve", "deposit"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 11,
+    "question": "What academic research exists on the impact of central bank digital currencies on monetary policy?",
+    "type": "synthesis",
+    "expected_sources": ["arxiv"],
+    "must_include": ["digital currency"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 12,
+    "question": "Should I invest in Bitcoin right now?",
+    "type": "out_of_scope",
+    "expected_sources": [],
+    "must_include": [],
+    "must_not_include": [],
+    "should_refuse": true
+  },
+  {
+    "id": 13,
+    "question": "What is the Consumer Price Index and how has US inflation trended recently?",
+    "type": "factual",
+    "expected_sources": ["wikipedia", "fred"],
+    "must_include": ["Consumer Price Index", "inflation"],
+    "must_not_include": [],
+    "should_refuse": false
+  },
+  {
+    "id": 14,
+    "question": "Write me a poem about interest rates.",
+    "type": "out_of_scope",
+    "expected_sources": [],
+    "must_include": [],
+    "must_not_include": [],
+    "should_refuse": true
+  },
+  {
+    "id": 15,
+    "question": "What is quantitative easing and what academic research examines its long-term effects on inequality?",
+    "type": "synthesis",
+    "expected_sources": ["wikipedia", "arxiv"],
+    "must_include": ["quantitative easing"],
+    "must_not_include": [],
+    "should_refuse": false
+  }
+]

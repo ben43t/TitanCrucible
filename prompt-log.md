@@ -64,3 +64,9 @@ All 18 tests pass.
 **Prompt:** Review and complete all tool tests. Ensure all HTTP calls mocked, cover happy/not-found/network-failure/force_fail paths, assert on ToolResult fields. Add tests/test_state.py for AgentState (max iterations, duplicate detection, should_continue).
 
 **Response:** Strengthened existing tool tests with additional field assertions (tool_name, content, sources) on error paths. Created tests/test_state.py with 9 tests: max iteration enforcement (within limit, at limit, step counting, default of 6) and duplicate detection (first call, identical call, different tool same query, same tool different query, multiple unique calls). All 27 tests pass.
+
+## Turn 11 — Evaluation Harness and Benchmark Questions
+
+**Prompt:** Create eval/questions.json (15 questions: 6 factual, 6 synthesis, 3 out-of-scope with all 8 reference questions plus 7 additional). Create eval/benchmark.py to run each question, score on source attribution, keyword presence, and refusal accuracy, and print summary table.
+
+**Response:** Created questions.json with 15 questions spanning factual lookups (Wikipedia/FRED), multi-source synthesis (Wikipedia+arXiv), and out-of-scope refusals. Created benchmark.py with scoring functions for source attribution (URL marker matching), keyword presence (case-insensitive), forbidden keyword absence, and refusal detection. Outputs per-question pass/fail table with overall score percentage. All scoring functions validated, all 27 unit tests pass.
